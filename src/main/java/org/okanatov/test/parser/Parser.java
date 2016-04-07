@@ -13,41 +13,35 @@ public class Parser {
     }
 
     public int expr() throws IOException {
-        int left = term();
-        int right;
+        int result = term();
 
         while (true) {
             switch (lookahead) {
                 case '+':
-                    match('+'); right = term();
-                    left += right;
+                    match('+'); result += term();
                     break;
                 case '-':
-                    match('-'); right = term();
-                    left -= right;
+                    match('-'); result -= term();
                     break;
                 default:
-                    return left;
+                    return result;
             }
         }
     }
 
     private int term() throws IOException {
-        int left = factor();
-        int right;
+        int result = factor();
 
         while (true) {
             switch (lookahead) {
                 case '*':
-                    match('*'); right = factor();
-                    left *= right;
+                    match('*'); result *= factor();
                     break;
                 case '/':
-                    match('/'); right = factor();
-                    left /= right;
+                    match('/'); result /= factor();
                     break;
                 default:
-                    return left;
+                    return result;
             }
         }
     }
