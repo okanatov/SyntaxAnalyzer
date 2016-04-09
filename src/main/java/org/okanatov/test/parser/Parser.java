@@ -13,37 +13,33 @@ public class Parser {
     }
 
     public int expr() throws IOException {
-        int result = term();
+        return expr_rest(term());
+    }
 
-        while (true) {
-            switch (lookahead) {
-                case '+':
-                    match('+'); result += term();
-                    break;
-                case '-':
-                    match('-'); result -= term();
-                    break;
-                default:
-                    return result;
-            }
+    private int expr_rest(int result) throws IOException {
+        if (lookahead == '+') {
+            match('+'); result += term(); result = expr_rest(result);
+        } else if (lookahead == '-') {
+            match('-'); result -= term(); result = expr_rest(result);
+        } else {
+            // Do nothing
         }
+        return result;
     }
 
     private int term() throws IOException {
-        int result = factor();
+        return term_rest(factor());
+    }
 
-        while (true) {
-            switch (lookahead) {
-                case '*':
-                    match('*'); result *= factor();
-                    break;
-                case '/':
-                    match('/'); result /= factor();
-                    break;
-                default:
-                    return result;
-            }
+    private int term_rest(int result) throws IOException {
+        if (lookahead == '*') {
+            match('*'); result *= factor(); result = term_rest(result);
+        } else if (lookahead == '/') {
+            match('/'); result /= factor(); result = term_rest(result);
+        } else {
+            // Do nothing
         }
+        return result;
     }
 
     private int factor() throws IOException {
