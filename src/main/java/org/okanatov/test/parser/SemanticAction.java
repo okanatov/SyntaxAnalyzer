@@ -1,20 +1,34 @@
 package org.okanatov.test.parser;
 
+import java.util.Stack;
+
 public enum SemanticAction implements Grammar {
-    A;
+    A();
 
-    public void action() {
-        Character op1 = Parser.operands.pop();
-        Character op2 = Parser.operands.pop();
-        Character oper = Parser.operators.pop();
+    public void action(Stack<Integer> operands, Stack<Character> operators) {
+        Integer op1 = operands.pop();
+        Character operator = operators.pop();
 
-        switch (oper) {
-            case '+':
-                Parser.operands.push(Character.forDigit((Character.digit(op1, 10) + Character.digit(op2, 10)), 10));
-                break;
-            case '*':
-                Parser.operands.push(Character.forDigit((Character.digit(op1, 10) * Character.digit(op2, 10)), 10));
-                break;
+        if (operator == 'u') {
+            operands.push(-op1);
+        } else {
+            Integer op2 = operands.pop();
+
+            switch (operator) {
+                case '+':
+                    operands.push(op1 + op2);
+                    break;
+                case '-':
+                    operands.push(op2 - op1);
+                    break;
+                case '*':
+                    operands.push(op1 * op2);
+                    break;
+
+                case '/':
+                    operands.push(op2 / op1);
+                    break;
+            }
         }
     }
 }

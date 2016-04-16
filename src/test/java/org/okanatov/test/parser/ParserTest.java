@@ -37,4 +37,22 @@ public class ParserTest {
         parser = new Parser("2+3+1");
         assertEquals(6, parser.expr());
     }
+
+    @Test
+    public void testEasy5() throws IOException {
+        parser = new Parser("4-3");
+        assertEquals(1, parser.expr());
+    }
+
+    @Test
+    public void testEasy6() throws IOException {
+        parser = new Parser("-2+3");
+        assertEquals(1, parser.expr());
+    }
+
+    @Test
+    public void testEasy7() throws IOException {
+        parser = new Parser("-2");
+        assertEquals(-2, parser.expr());
+    }
 }
