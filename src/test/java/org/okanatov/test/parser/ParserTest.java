@@ -21,10 +21,20 @@ public class ParserTest {
         assertEquals(7, parser.expr());
     }
     @Test
-
     public void testEasy2() throws IOException {
         parser = new Parser("2*3+1");
         assertEquals(7, parser.expr());
     }
 
+    @Test
+    public void testEasy3() throws IOException {
+        parser = new Parser("2*3*1");
+        assertEquals(6, parser.expr());
+    }
+
+    @Test
+    public void testEasy4() throws IOException {
+        parser = new Parser("2+3+1");
+        assertEquals(6, parser.expr());
+    }
 }
