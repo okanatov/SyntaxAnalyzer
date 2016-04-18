@@ -55,4 +55,15 @@ public class ParserTest {
         parser = new Parser("-2");
         assertEquals(-2, parser.expr());
     }
+
+    @Test
+    public void testEasy8() throws IOException {
+        parser = new Parser("-2*6");
+        assertEquals(-12, parser.expr());
+    }
+    @Test
+    public void testEasy9() throws IOException {
+        parser = new Parser("6*-2");
+        assertEquals(-12, parser.expr());
+    }
 }

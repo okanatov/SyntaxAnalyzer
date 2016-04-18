@@ -58,10 +58,20 @@ public class Parser {
                 ((SemanticAction) currentSymbol).action(operands, operators);
                 stack.pop();
             } else {
-                if (((GrammarSymbols) currentSymbol).isTerminal()) {
-                    stack.pop();
-                    operands.push(Character.digit(lookahead, 10));
-                    match(lookahead);
+                if (currentSymbol instanceof Terminal) {
+                    if (Character.isDigit((char) lookahead)) {
+                        stack.pop();
+                        operands.push(Character.digit(lookahead, 10));
+                        match(lookahead);
+                    } else if (lookahead == '-') {
+                        stack.pop();
+                        stack.push(SemanticAction.A);
+                        stack.push(Terminal.F);
+                        operators.push('u');
+                        match('-');
+                    } else {
+                        System.out.println("Error");
+                    }
                 } else {
                     switch (table.get(currentSymbol).get((char) lookahead)) {
                         case 0: // E->TE'
@@ -108,7 +118,6 @@ public class Parser {
                             stack.push(NonTerminal.T);
                             operators.push('u');
                             match('-');
-                            break;
                         default:
                             System.out.println("Error");
                     }
