@@ -44,6 +44,12 @@ public class Parser {
         t_.put('*', 4);
         t_.put(Character.MAX_VALUE, 3);
         table.put(NonTerminal._T, t_);
+
+        Map<Character, Integer> f = new HashMap<>();
+        for (int i = 0; i < 10; i++)
+            f.put(Character.forDigit(i, 10), 7);
+        f.put('-', 8);
+        table.put(Terminal.F, f);
     }
 
     public int expr() throws IOException {
@@ -58,69 +64,66 @@ public class Parser {
                 ((SemanticAction) currentSymbol).action(operands, operators);
                 stack.pop();
             } else {
-                if (currentSymbol instanceof Terminal) {
-                    if (Character.isDigit((char) lookahead)) {
+                switch (table.get(currentSymbol).get((char) lookahead)) {
+                    case 0: // E->TE'
+                        stack.pop();
+                        stack.push(NonTerminal._E);
+                        stack.push(NonTerminal.T);
+                        break;
+                    case 1: // E'->+TE'
+                        stack.pop();
+                        stack.push(NonTerminal._E);
+                        stack.push(SemanticAction.A);
+                        stack.push(NonTerminal.T);
+                        operators.push('+');
+                        match('+');
+                        break;
+                    case 2: // T->FT'
+                        stack.pop();
+                        stack.push(NonTerminal._T);
+                        stack.push(Terminal.F);
+                        break;
+                    case 3: // T'->e | E'->e
+                        stack.pop();
+                        break;
+                    case 4: // T'->*FT'
+                        stack.pop();
+                        stack.push(NonTerminal._T);
+                        stack.push(SemanticAction.A);
+                        stack.push(Terminal.F);
+                        operators.push('*');
+                        match('*');
+                        break;
+                    case 5: // E'->-TE'
+                        stack.pop();
+                        stack.push(NonTerminal._E);
+                        stack.push(SemanticAction.A);
+                        stack.push(NonTerminal.T);
+                        operators.push('-');
+                        match('-');
+                        break;
+                    case 6: // -E->-TE'
+                        stack.pop();
+                        stack.push(NonTerminal._E);
+                        stack.push(SemanticAction.A);
+                        stack.push(NonTerminal.T);
+                        operators.push('u');
+                        match('-');
+                        break;
+                    case 7: // F->id
                         stack.pop();
                         operands.push(Character.digit(lookahead, 10));
                         match(lookahead);
-                    } else if (lookahead == '-') {
+                        break;
+                    case 8: // F->-id
                         stack.pop();
                         stack.push(SemanticAction.A);
                         stack.push(Terminal.F);
                         operators.push('u');
                         match('-');
-                    } else {
+                        break;
+                    default:
                         System.out.println("Error");
-                    }
-                } else {
-                    switch (table.get(currentSymbol).get((char) lookahead)) {
-                        case 0: // E->TE'
-                            stack.pop();
-                            stack.push(NonTerminal._E);
-                            stack.push(NonTerminal.T);
-                            break;
-                        case 1: // E'->+TE'
-                            stack.pop();
-                            stack.push(NonTerminal._E);
-                            stack.push(SemanticAction.A);
-                            stack.push(NonTerminal.T);
-                            operators.push('+');
-                            match('+');
-                            break;
-                        case 2: // T->FT'
-                            stack.pop();
-                            stack.push(NonTerminal._T);
-                            stack.push(Terminal.F);
-                            break;
-                        case 3: // T'->e | E'->e
-                            stack.pop();
-                            break;
-                        case 4: // T'->*FT'
-                            stack.pop();
-                            stack.push(NonTerminal._T);
-                            stack.push(SemanticAction.A);
-                            stack.push(Terminal.F);
-                            operators.push('*');
-                            match('*');
-                            break;
-                        case 5: // E'->-TE'
-                            stack.pop();
-                            stack.push(NonTerminal._E);
-                            stack.push(SemanticAction.A);
-                            stack.push(NonTerminal.T);
-                            operators.push('-');
-                            match('-');
-                            break;
-                        case 6: // -E->-TE'
-                            stack.pop();
-                            stack.push(NonTerminal._E);
-                            stack.push(SemanticAction.A);
-                            stack.push(NonTerminal.T);
-                            operators.push('u');
-                            match('-');
-                        default:
-                            System.out.println("Error");
-                    }
                 }
             }
             if (!stack.empty())
