@@ -45,6 +45,7 @@ public class Parser {
         t_.put('+', 3);
         t_.put('-', 3);
         t_.put('*', 4);
+        t_.put('/', 13);
         t_.put(')', 3);
         t_.put(Character.MAX_VALUE, 3);
         table.put(NonTerminal._T, t_);
@@ -147,6 +148,14 @@ public class Parser {
                     case 12: // E'->) | T'->) | F->)
                         stack.pop();
                         match(')');
+                        break;
+                    case 13: // T'->/FT'
+                        stack.pop();
+                        stack.push(NonTerminal._T);
+                        stack.push(SemanticAction.A);
+                        stack.push(Terminal.F);
+                        operators.push('/');
+                        match('/');
                         break;
                     default:
                         System.out.println("Error");
