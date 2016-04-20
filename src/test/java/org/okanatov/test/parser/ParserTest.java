@@ -61,9 +61,28 @@ public class ParserTest {
         parser = new Parser("-2*6");
         assertEquals(-12, parser.expr());
     }
+
     @Test
     public void testEasy9() throws IOException {
         parser = new Parser("6*-2");
         assertEquals(-12, parser.expr());
+    }
+
+    @Test
+    public void testEasy10() throws IOException {
+        parser = new Parser("(6)");
+        assertEquals(6, parser.expr());
+    }
+
+    @Test
+    public void testEasy11() throws IOException {
+        parser = new Parser("(1+2)*3");
+        assertEquals(9, parser.expr());
+    }
+
+    @Test
+    public void testEasy12() throws IOException {
+        parser = new Parser("2*(3+1)");
+        assertEquals(8, parser.expr());
     }
 }

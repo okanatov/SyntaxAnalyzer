@@ -22,12 +22,14 @@ public class Parser {
         for (int i = 0; i < 10; i++)
             e.put(Character.forDigit(i, 10), 0);
         e.put('-', 6);
+        e.put('(', 9);
 
         table.put(NonTerminal.E, e);
 
         Map<Character, Integer> e_ = new HashMap<>();
         e_.put('+', 1);
         e_.put('-', 5);
+        e_.put(')', 3);
         e_.put(Character.MAX_VALUE, 3);
         table.put(NonTerminal._E, e_);
 
@@ -35,6 +37,7 @@ public class Parser {
 
         for (int i = 0; i < 10; i++)
             t.put(Character.forDigit(i, 10), 2);
+        t.put('(', 10);
 
         table.put(NonTerminal.T, t);
 
@@ -42,6 +45,7 @@ public class Parser {
         t_.put('+', 3);
         t_.put('-', 3);
         t_.put('*', 4);
+        t_.put(')', 3);
         t_.put(Character.MAX_VALUE, 3);
         table.put(NonTerminal._T, t_);
 
@@ -49,6 +53,8 @@ public class Parser {
         for (int i = 0; i < 10; i++)
             f.put(Character.forDigit(i, 10), 7);
         f.put('-', 8);
+        f.put('(', 11);
+        f.put(')', 12);
         table.put(Terminal.F, f);
     }
 
@@ -121,6 +127,26 @@ public class Parser {
                         stack.push(Terminal.F);
                         operators.push('u');
                         match('-');
+                        break;
+                    case 9: // E->(TE')
+                        stack.pop();
+                        stack.push(NonTerminal._E);
+                        stack.push(NonTerminal.T);
+                        break;
+                    case 10: // T->(FT')
+                        stack.pop();
+                        stack.push(NonTerminal._T);
+                        stack.push(Terminal.F);
+                        break;
+                    case 11: // F->(E)
+                        stack.pop();
+                        match('(');
+                        stack.push(Terminal.F);
+                        stack.push(NonTerminal.E);
+                        break;
+                    case 12: // E'->) | T'->) | F->)
+                        stack.pop();
+                        match(')');
                         break;
                     default:
                         System.out.println("Error");
