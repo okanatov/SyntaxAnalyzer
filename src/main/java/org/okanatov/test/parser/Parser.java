@@ -6,11 +6,12 @@ import java.util.Stack;
 
 public class Parser {
     private StringReader sourceExpression;
-    private int lookahead;
     private States state;
-    private Stack<States> stack;
-    private Stack<Integer> operands = new Stack<>();
-    private Stack<Character> operators = new Stack<>();
+
+    int lookahead;
+    Stack<States> stack;
+    Stack<Integer> operands = new Stack<>();
+    Stack<Character> operators = new Stack<>();
 
     public Parser(String sourceExpression) throws IOException {
         this.sourceExpression = new StringReader(sourceExpression);
@@ -22,6 +23,7 @@ public class Parser {
 
     public int expr() throws IOException {
         while (!stack.empty()) {
+            stack.pop();
             switch (lookahead) {
                 case '0':
                 case '1':
@@ -33,23 +35,31 @@ public class Parser {
                 case '7':
                 case '8':
                 case '9':
-                    stack.pop();
-                    state.handle_id(this, stack, operands, operators, lookahead);
+                    state.handle_id(this);
                     break;
                 case '+':
-                    stack.pop();
-                    state.handle_plus(this, stack, operands, operators);
+                    state.handle_plus(this);
                     break;
                 case '-':
-                    state.handle_minus(stack, operands, operators);
-                    match('-');
+                    state.handle_minus(this);
+                    break;
+                case '*':
+                    state.handle_multiply(this);
+                    break;
+                case '/':
+                    state.handle_division(this);
+                    break;
+                case '(':
+                    state.handle_left_brace(this);
+                    break;
+                case ')':
+                    state.handle_right_brace(this);
                     break;
                 case -1:
-                    stack.pop();
-                    state.handle_empty(stack, operands, operators);
+                    state.handle_empty(this);
                     break;
                 default:
-                    System.out.println("Error");
+                    System.out.println("Error: unknown character.");
                     break;
             }
             if (!stack.empty())
@@ -58,8 +68,8 @@ public class Parser {
         return operands.peek();
     }
 
-    public void match(int c) throws IOException {
+    void match(int c) throws IOException {
         if (lookahead == c) lookahead = sourceExpression.read();
-        else throw new Error("syntax error");
+        else throw new Error("Error: syntax error.");
     }
 }

@@ -1,53 +1,73 @@
 package org.okanatov.test.parser;
 
-import java.util.Stack;
+import java.io.IOException;
 
-public class A implements States {
+class A implements States {
     @Override
-    public void handle_id(Parser parser, Stack<States> stack, Stack<Integer> operands, Stack<Character> operators, int lookahead) {
-        System.out.println("Error in state " + this.getClass().getName() + " on id receive");
+    public void handle_id(Parser parser) {
+        System.out.println("Error in state " + this.getClass().getName() + " on id receive.");
     }
 
     @Override
-    public void handle_plus(Parser parser, Stack<States> stack, Stack<Integer> operands, Stack<Character> operators) {
-        action(operands, operators);
+    public void handle_plus(Parser parser) {
+        action(parser);
     }
 
     @Override
-    public void handle_minus(Stack<States> stack, Stack<Integer> operands, Stack<Character> operators) {
-        System.out.println("Error in state " + this.getClass().getName() + " on minus receive");
+    public void handle_minus(Parser parser) {
+        action(parser);
     }
 
     @Override
-    public void action(Stack<Integer> operands, Stack<Character> operators) {
-        Integer op1 = operands.pop();
-        Character operator = operators.pop();
+    public void action(Parser parser) {
+        Integer op1 = parser.operands.pop();
+        Character operator = parser.operators.pop();
 
         if (operator == 'u') {
-            operands.push(-op1);
+            parser.operands.push(-op1);
         } else {
-            Integer op2 = operands.pop();
+            Integer op2 = parser.operands.pop();
 
             switch (operator) {
                 case '+':
-                    operands.push(op1 + op2);
+                    parser.operands.push(op1 + op2);
                     break;
                 case '-':
-                    operands.push(op2 - op1);
+                    parser.operands.push(op2 - op1);
                     break;
                 case '*':
-                    operands.push(op1 * op2);
+                    parser.operands.push(op1 * op2);
                     break;
 
                 case '/':
-                    operands.push(op2 / op1);
+                    parser.operands.push(op2 / op1);
                     break;
             }
         }
     }
 
     @Override
-    public void handle_empty(Stack<States> stack, Stack<Integer> operands, Stack<Character> operators) {
-        action(operands, operators);
+    public void handle_empty(Parser parser) {
+        action(parser);
+    }
+
+    @Override
+    public void handle_multiply(Parser parser) throws IOException {
+        action(parser);
+    }
+
+    @Override
+    public void handle_division(Parser parser) throws IOException {
+        action(parser);
+    }
+
+    @Override
+    public void handle_left_brace(Parser parser) throws IOException {
+        System.out.println("Error in state " + this.getClass().getName() + " on left brace receive.");
+    }
+
+    @Override
+    public void handle_right_brace(Parser parser) {
+        System.out.println("Error in state " + this.getClass().getName() + " on right brace receive.");
     }
 }
