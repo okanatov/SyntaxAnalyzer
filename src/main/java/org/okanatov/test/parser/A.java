@@ -67,7 +67,7 @@ class A implements States {
     }
 
     @Override
-    public void handle_right_brace(Parser parser) {
-        System.out.println("Error in state " + this.getClass().getName() + " on right brace receive.");
+    public void handle_right_brace(Parser parser) throws IOException {
+        action(parser);
     }
 }

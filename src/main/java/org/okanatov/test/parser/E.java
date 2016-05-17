@@ -44,7 +44,7 @@ class E implements States {
     }
 
     @Override
-    public void handle_left_brace(Parser parser) {
+    public void handle_left_brace(Parser parser) throws IOException {
         parser.stack.push(new E_());
         parser.stack.push(new T());
     }

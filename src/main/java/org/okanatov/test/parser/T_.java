@@ -53,6 +53,6 @@ public class T_ implements States {
 
     @Override
     public void handle_right_brace(Parser parser) throws IOException {
-        parser.match(')');
+        // empty implementation
     }
 }

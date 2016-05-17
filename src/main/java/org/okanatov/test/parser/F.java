@@ -44,12 +44,13 @@ class F implements States {
 
     @Override
     public void handle_left_brace(Parser parser) throws IOException {
+        parser.stack.push(new F());
         parser.stack.push(new E());
         parser.match('(');
     }
 
     @Override
     public void handle_right_brace(Parser parser) throws IOException {
-        System.out.println("Error in state " + this.getClass().getName() + " on right brace receive.");
+        parser.match(')');
     }
 }
