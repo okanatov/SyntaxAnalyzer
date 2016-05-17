@@ -16,7 +16,7 @@ public class Parser {
     public Parser(String sourceExpression) throws IOException {
         this.sourceExpression = new StringReader(sourceExpression);
         this.lookahead = this.sourceExpression.read();
-        this.state = new E();
+        this.state = E.INSTANCE;
         this.stack = new Stack<>();
         this.stack.push(state);
     }

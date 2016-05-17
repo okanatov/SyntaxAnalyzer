@@ -3,6 +3,9 @@ package org.okanatov.test.parser;
 import java.io.IOException;
 
 class A implements States {
+
+    public static final A INSTANCE = new A();
+
     @Override
     public void handle_id(Parser parser) {
         System.out.println("Error in state " + this.getClass().getName() + " on id receive.");

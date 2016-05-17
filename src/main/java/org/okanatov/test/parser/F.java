@@ -3,6 +3,9 @@ package org.okanatov.test.parser;
 import java.io.IOException;
 
 class F implements States {
+
+    public static final F INSTANCE = new F();
+
     @Override
     public void handle_id(Parser parser) throws IOException {
         parser.operands.push(Character.digit(parser.lookahead, 10));
@@ -16,8 +19,8 @@ class F implements States {
 
     @Override
     public void handle_minus(Parser parser) throws IOException {
-        parser.stack.push(new A());
-        parser.stack.push(new F());
+        parser.stack.push(A.INSTANCE);
+        parser.stack.push(F.INSTANCE);
         parser.operators.push('u');
         parser.match('-');
     }
@@ -44,8 +47,8 @@ class F implements States {
 
     @Override
     public void handle_left_brace(Parser parser) throws IOException {
-        parser.stack.push(new F());
-        parser.stack.push(new E());
+        parser.stack.push(F.INSTANCE);
+        parser.stack.push(E.INSTANCE);
         parser.match('(');
     }
 

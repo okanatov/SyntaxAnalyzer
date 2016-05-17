@@ -3,6 +3,9 @@ package org.okanatov.test.parser;
 import java.io.IOException;
 
 class E_ implements States {
+
+    public static final E_ INSTANCE = new E_();
+
     @Override
     public void handle_id(Parser parser) {
         System.out.println("Error in state " + this.getClass().getName() + " on id receive.");
@@ -10,18 +13,18 @@ class E_ implements States {
 
     @Override
     public void handle_plus(Parser parser) throws IOException {
-        parser.stack.push(new E_());
-        parser.stack.push(new A());
-        parser.stack.push(new T());
+        parser.stack.push(E_.INSTANCE);
+        parser.stack.push(A.INSTANCE);
+        parser.stack.push(T.INSTANCE);
         parser.operators.push('+');
         parser.match('+');
     }
 
     @Override
     public void handle_minus(Parser parser) throws IOException {
-        parser.stack.push(new E_());
-        parser.stack.push(new A());
-        parser.stack.push(new T());
+        parser.stack.push(E_.INSTANCE);
+        parser.stack.push(A.INSTANCE);
+        parser.stack.push(T.INSTANCE);
         parser.operators.push('-');
         parser.match('-');
     }

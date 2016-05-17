@@ -3,10 +3,13 @@ package org.okanatov.test.parser;
 import java.io.IOException;
 
 public class T implements States {
+
+    public static final T INSTANCE = new T();
+
     @Override
     public void handle_id(Parser parser) throws IOException {
-        parser.stack.push(new T_());
-        parser.stack.push(new F());
+        parser.stack.push(T_.INSTANCE);
+        parser.stack.push(F.INSTANCE);
     }
 
     @Override
@@ -41,8 +44,8 @@ public class T implements States {
 
     @Override
     public void handle_left_brace(Parser parser) {
-        parser.stack.push(new T_());
-        parser.stack.push(new F());
+        parser.stack.push(T_.INSTANCE);
+        parser.stack.push(F.INSTANCE);
     }
 
     @Override
