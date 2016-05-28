@@ -28,12 +28,7 @@ public class Parser {
         currentState = stack.peek();
 
         while (!stack.empty()) {
-            for (Transition t : transitions) {
-                if (t.isStatesEqual(States.E)) {
-                    t.action(this);
-                }
-            }
-
+            transitions.forEach(value -> { if (value.isStatesEqual(currentState)) value.action(this); });
             stack.pop();
 
             if (!stack.empty())
